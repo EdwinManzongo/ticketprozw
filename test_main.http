@@ -1,0 +1,36 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/api/v1/user/1
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/api/v1/user/
+Content-Type: application/json
+
+{
+  "firstname": "Miriam",
+  "surname": "Manzongo",
+  "email": "miriam@blackandthird.com",
+  "password": "123456",
+  "phone_number": "0776445592",
+  "street_address": "Flat 01 Zambezi Flats, Quendon",
+  "active": true
+}
+
+
+###
+
+POST http://127.0.0.1:8000/api/v1/user/auth/
+Content-Type: application/json
+
+{
+  "username": "miriam@blackandthird.com",
+  "password": "123456"
+}
+
