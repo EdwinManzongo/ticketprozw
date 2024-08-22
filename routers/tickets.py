@@ -19,7 +19,8 @@ async def read_ticket(ticket_id: int, db: db_dependency):
 @router.post("/")
 async def create_ticket(ticket: tickets_schema.TicketBase, db: db_dependency):
     existing_ticket = db.query(tickets_model.Tickets).filter(
-        tickets_model.Tickets.order_id == ticket.order_id and tickets_model.Tickets.ticket_type_id == ticket.ticket_type_id).first()
+        tickets_model.Tickets.order_id == ticket.order_id and
+        tickets_model.Tickets.ticket_type_id == ticket.ticket_type_id).first()
 
     if existing_ticket:
         raise HTTPException(status_code=400, detail="Ticket already exists")
@@ -45,7 +46,8 @@ async def read_ticket_type(ticket_type_id: int, db: db_dependency):
 @router.post("/types/")
 async def create_ticket_type(ticket_type: tickets_schema.TicketTypeBase, db: db_dependency):
     # tickets_model.TicketTypes.event_id == ticket_type.event_id and
-    existing_ticket_type = db.query(tickets_model.TicketTypes).filter(tickets_model.TicketTypes.name == ticket_type.name).first()
+    existing_ticket_type = db.query(tickets_model.TicketTypes).filter(
+        tickets_model.TicketTypes.name == ticket_type.name).first()
     if existing_ticket_type:
         raise HTTPException(status_code=400, detail="Ticket type already exists")
 
@@ -65,4 +67,3 @@ async def create_ticket_type(ticket_type: tickets_schema.TicketTypeBase, db: db_
 async def read_all_ticket_type(db: db_dependency):
     result = db.query(tickets_model.TicketTypes).all()
     return result
-
