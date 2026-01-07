@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - TicketProZW{% endblock %}
+
+{% block content %}
+<h2>Order Confirmed!</h2>
+
+<p>Hi {{ customer_name }},</p>
+
+<p>Thank you for your order! We're excited to confirm your purchase for <span class="highlight">{{ event_name }}</span>.</p>
+
+<div class="info-box">
+    <h3>Order Details</h3>
+    <div class="info-row">
+        <span class="info-label">Order Number:</span>
+        <span class="info-value">#{{ order_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Order Date:</span>
+        <span class="info-value">{{ order_date }}</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Event Information</h3>
+    <div class="info-row">
+        <span class="info-label">Event:</span>
+        <span class="info-value">{{ event_name }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date & Time:</span>
+        <span class="info-value">{{ event_date }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Location:</span>
+        <span class="info-value">{{ event_location }}</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Tickets</h3>
+    {% for ticket in tickets %}
+    <div class="info-row">
+        <span class="info-label">{{ ticket.type }}</span>
+        <span class="info-value">{{ ticket.quantity }} x ${{ "%.2f"|format(ticket.price) }}</span>
+    </div>
+    {% endfor %}
+    <div class="total">
+        Total: ${{ "%.2f"|format(total_amount) }}
+    </div>
+</div>
+
+<p>Your tickets will be sent to you in a separate email once your payment is confirmed. Please keep this email for your records.</p>
+
+<p><strong>What's Next?</strong></p>
+<ul>
+    <li>You'll receive your e-tickets via email shortly</li>
+    <li>Each ticket will include a unique QR code for entry</li>
+    <li>Present your QR code at the venue entrance</li>
+</ul>
+
+<p>If you have any questions about your order, please don't hesitate to contact our support team.</p>
+
+<p>See you at the event!</p>
+
+<p>Best regards,<br>
+The TicketProZW Team</p>
+{% endblock %}

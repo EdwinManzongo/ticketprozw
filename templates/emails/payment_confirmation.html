@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Confirmed - TicketProZW{% endblock %}
+
+{% block content %}
+<h2>Payment Confirmed</h2>
+
+<p>Hi {{ customer_name }},</p>
+
+<p>Great news! Your payment has been successfully processed for <span class="highlight">{{ event_name }}</span>.</p>
+
+<div class="info-box">
+    <h3>Payment Details</h3>
+    <div class="info-row">
+        <span class="info-label">Order Number:</span>
+        <span class="info-value">#{{ order_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Transaction ID:</span>
+        <span class="info-value">{{ transaction_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Amount Paid:</span>
+        <span class="info-value">{{ currency }} ${{ "%.2f"|format(amount) }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Payment Method:</span>
+        <span class="info-value">{{ payment_method }}</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Event Information</h3>
+    <div class="info-row">
+        <span class="info-label">Event:</span>
+        <span class="info-value">{{ event_name }}</span>
+    </div>
+</div>
+
+<p><strong>What Happens Next?</strong></p>
+<ul>
+    <li>Your tickets will be sent to you in a separate email within the next few minutes</li>
+    <li>Each ticket will include a unique QR code for entry to the event</li>
+    <li>You can access your tickets anytime from your account on our website</li>
+    <li>A receipt for this transaction has been recorded in your account</li>
+</ul>
+
+<p style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0;">
+    <strong>Payment Successful!</strong> Your order is now confirmed and you're all set for the event.
+</p>
+
+<p><strong>Need Help?</strong></p>
+<p>If you have any questions about your payment or tickets, our support team is here to help. Contact us at support@ticketpro.zw or call our helpline.</p>
+
+<p><strong>Keep This Email:</strong> This confirmation serves as your payment receipt. Please save it for your records.</p>
+
+<p>Thank you for choosing TicketProZW!</p>
+
+<p>Best regards,<br>
+The TicketProZW Team</p>
+{% endblock %}

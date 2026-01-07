@@ -1,0 +1,57 @@
+{
+    "schemaVersion": "1.0",
+    "generatedBy": "GitHub Copilot",
+    "generatedAt": "2025-11-11T00:00:00Z",
+    "project": "ticketprozw",
+    "description": "Audit log showing who performed actions on resources.",
+    "records": [
+        {
+            "id": "rec-0001",
+            "action": "create_ticket",
+            "resource": "ticket",
+            "resourceId": "TICKET-1001",
+            "user": {
+                "id": "u-100",
+                "name": "Alice Admin",
+                "email": "alice@example.com"
+            },
+            "timestamp": "2025-11-10T14:23:00Z",
+            "details": {
+                "summary": "Initial ticket created",
+                "priority": "high"
+            }
+        },
+        {
+            "id": "rec-0002",
+            "action": "assign_ticket",
+            "resource": "ticket",
+            "resourceId": "TICKET-1001",
+            "user": {
+                "id": "u-101",
+                "name": "Bob Support",
+                "email": "bob@example.com"
+            },
+            "timestamp": "2025-11-10T15:02:30Z",
+            "details": {
+                "assignee": "u-102",
+                "note": "Assigning to on-call engineering"
+            }
+        },
+        {
+            "id": "rec-0003",
+            "action": "close_ticket",
+            "resource": "ticket",
+            "resourceId": "TICKET-1001",
+            "user": {
+                "id": "u-102",
+                "name": "Cara Engineer",
+                "email": "cara@example.com"
+            },
+            "timestamp": "2025-11-11T09:10:00Z",
+            "details": {
+                "resolution": "fixed",
+                "comment": "Deployed patch to production"
+            }
+        }
+    ]
+}

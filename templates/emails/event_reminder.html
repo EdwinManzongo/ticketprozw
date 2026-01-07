@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Event Reminder - TicketProZW{% endblock %}
+
+{% block content %}
+<h2>Event Reminder</h2>
+
+<p>Hi {{ customer_name }},</p>
+
+<p>This is a friendly reminder that your event <span class="highlight">{{ event_name }}</span> is coming up soon!</p>
+
+<div class="info-box">
+    <h3>Event Details</h3>
+    <div class="info-row">
+        <span class="info-label">Event:</span>
+        <span class="info-value">{{ event_name }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date & Time:</span>
+        <span class="info-value">{{ event_date }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Location:</span>
+        <span class="info-value">{{ event_location }}</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>Your Booking</h3>
+    <div class="info-row">
+        <span class="info-label">Order Number:</span>
+        <span class="info-value">#{{ order_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Number of Tickets:</span>
+        <span class="info-value">{{ ticket_count }}</span>
+    </div>
+</div>
+
+<p><strong>Getting Ready for the Event:</strong></p>
+<ul>
+    <li>Make sure you have your e-ticket QR code saved on your phone or printed</li>
+    <li>Arrive at least 30 minutes before the event starts to avoid queues</li>
+    <li>Check the venue's website for parking information and directions</li>
+    <li>Bring a valid ID for verification if required</li>
+    <li>Check the weather forecast and dress accordingly</li>
+</ul>
+
+<p><strong>What to Bring:</strong></p>
+<ul>
+    <li>Your e-ticket with QR code (digital or printed)</li>
+    <li>Valid photo ID</li>
+    <li>Comfortable shoes (if standing event)</li>
+</ul>
+
+<p style="background-color: #d1ecf1; border-left: 4px solid #0c5460; padding: 15px; margin: 20px 0;">
+    <strong>Can't Make It?</strong> If you need to cancel or transfer your tickets, please contact our support team as soon as possible.
+</p>
+
+<p>We're looking forward to seeing you at {{ event_name }}! Have a great time!</p>
+
+<p>Best regards,<br>
+The TicketProZW Team</p>
+{% endblock %}

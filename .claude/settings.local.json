@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(PGPASSWORD=root psql:*)",
+      "Bash(alembic init:*)",
+      "Bash(alembic revision:*)",
+      "Bash(alembic stamp:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImplement comprehensive security, infrastructure, and feature enhancements (Phases 1-3)\n\nPHASE 1: Security Foundation\n- Implement JWT authentication with access/refresh tokens and RBAC (admin, organizer, user)\n- Add password validation (8+ chars, uppercase, lowercase, digit) and secure hashing\n- Fix user enumeration vulnerability and password exposure in API responses\n- Add rate limiting (slowapi) to prevent brute force attacks\n- Implement global error handling with custom exceptions\n- Remove hardcoded database credentials, migrate to Pydantic Settings\n- Optimize database indexes (removed 15+ unnecessary indexes)\n- Fix SQL query bug in orders router (line 22)\n\nPHASE 2: Core Infrastructure\n- Set up Alembic for database migrations with autogenerate\n- Add bidirectional SQLAlchemy relationships across all models\n- Implement audit fields (created_at, updated_at, deleted_at) and soft delete pattern\n- Complete full CRUD operations for all resources (Events, Orders, Tickets, TicketTypes)\n- Add pagination and filtering to all list endpoints with PaginatedResponse[T]\n- Implement proper authorization checks (users can only access their own data)\n\nPHASE 3: Feature Implementation\n- Integrate Stripe payment processing with payment intents, webhooks, and refunds\n- Implement SendGrid email notifications with professional HTML templates\n- Add QR code generation and ticket validation system\n- Implement ticket check-in/check-out functionality for event staff\n- Add inventory management with row-level locking to prevent overselling\n- Automatic QR code generation and ticket delivery emails on payment success\n\nKey Files:\n- core/: Authentication, authorization, config, exceptions, pagination\n- services/: Stripe, SendGrid email, QR code generation\n- routers/: Auth, payments, validation endpoints\n- models/: Added payments model, inventory fields\n- alembic/: Database migration system with 4 migrations applied\n- templates/emails/: Professional email templates for customer communications\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")"
+    ]
+  }
+}

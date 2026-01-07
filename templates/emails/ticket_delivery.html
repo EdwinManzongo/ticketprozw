@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Your E-Ticket - TicketProZW{% endblock %}
+
+{% block content %}
+<h2>Your E-Ticket is Here!</h2>
+
+<p>Hi {{ customer_name }},</p>
+
+<p>Your payment has been confirmed and your e-ticket is ready! Here are the details for your upcoming event.</p>
+
+<div class="info-box">
+    <h3>Ticket Information</h3>
+    <div class="info-row">
+        <span class="info-label">Ticket ID:</span>
+        <span class="info-value">#{{ ticket_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Order Number:</span>
+        <span class="info-value">#{{ order_id }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Ticket Type:</span>
+        <span class="info-value">{{ ticket_type }}</span>
+    </div>
+    {% if seat_number %}
+    <div class="info-row">
+        <span class="info-label">Seat:</span>
+        <span class="info-value">{{ seat_number }}</span>
+    </div>
+    {% endif %}
+</div>
+
+<div class="info-box">
+    <h3>Event Details</h3>
+    <div class="info-row">
+        <span class="info-label">Event:</span>
+        <span class="info-value">{{ event_name }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Date & Time:</span>
+        <span class="info-value">{{ event_date }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Venue:</span>
+        <span class="info-value">{{ event_location }}</span>
+    </div>
+</div>
+
+<p><strong>Important Information:</strong></p>
+<ul>
+    <li><strong>QR Code:</strong> Your unique QR code is attached to this email. Please save it to your phone or print it.</li>
+    <li><strong>Entry:</strong> Present your QR code at the venue entrance for scanning.</li>
+    <li><strong>Arrival:</strong> Please arrive at least 30 minutes before the event starts.</li>
+    <li><strong>ID Required:</strong> You may be asked to show a valid ID matching the ticket holder's name.</li>
+</ul>
+
+<p><strong>Tips for Event Day:</strong></p>
+<ul>
+    <li>Save your QR code to your phone's photo gallery or wallet</li>
+    <li>Ensure your phone is charged before arriving at the venue</li>
+    <li>Check for any event-specific guidelines or requirements</li>
+    <li>Follow the venue's social media for any last-minute updates</li>
+</ul>
+
+<p style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+    <strong>Note:</strong> Each ticket can only be used once. Do not share your QR code with anyone else.
+</p>
+
+<p>We hope you have an amazing time at {{ event_name }}!</p>
+
+<p>Best regards,<br>
+The TicketProZW Team</p>
+{% endblock %}
