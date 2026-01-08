@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from routers import users, events, orders, tickets, auth, payments, validation
+from routers import users, events, orders, tickets, auth, payments, validation, admin
 from core.config import settings
 from core.exceptions import TicketProException
 from core.exception_handlers import (
@@ -53,6 +53,7 @@ app.include_router(orders.router)
 app.include_router(tickets.router)
 app.include_router(payments.router)
 app.include_router(validation.router)
+app.include_router(admin.router)
 
 
 @app.get("/")

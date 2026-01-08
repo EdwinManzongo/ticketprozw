@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 import logging
 
-from database import get_db
+from dependencies import get_db
 from models.users import Users
 from models.orders import Orders
 from models.payments import PaymentTransaction
@@ -365,7 +365,7 @@ async def stripe_webhook(
                                 "ticket_id": ticket.id,
                                 "customer_name": f"{order.user.firstname} {order.user.surname}",
                                 "event_name": event.event_name if event else "Unknown Event",
-                                "event_date": event.event_date.strftime("%B %d, %Y at %I:%M %p") if event else "TBD",
+                                "event_date": event.date.strftime("%B %d, %Y at %I:%M %p") if event and event.date else "TBD",
                                 "event_location": event.location if event else "TBD",
                                 "ticket_type": ticket_type.name if ticket_type else "Unknown",
                                 "seat_number": ticket.seat_number,
