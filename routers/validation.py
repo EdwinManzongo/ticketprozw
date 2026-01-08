@@ -7,7 +7,7 @@ from datetime import datetime
 import logging
 import json
 
-from database import get_db
+from dependencies import get_db
 from models.users import Users
 from models.tickets import Tickets, TicketTypes
 from models.orders import Orders

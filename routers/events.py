@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from database import get_db
+from dependencies import get_db
 from models.events import Events
 from models.users import Users
 from schemas.events import EventCreate, EventUpdate, EventResponse
