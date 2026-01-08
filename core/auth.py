@@ -41,9 +41,14 @@ async def get_current_user(
     if payload is None:
         raise credentials_exception
 
-    # Extract user ID from token
-    user_id: int | None = payload.get("sub")
-    if user_id is None:
+    # Extract user ID from token (convert from string to int)
+    user_id_str: str | None = payload.get("sub")
+    if user_id_str is None:
+        raise credentials_exception
+
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
         raise credentials_exception
 
     # Verify token type is access token

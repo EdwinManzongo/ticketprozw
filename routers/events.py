@@ -4,7 +4,7 @@ Events router - Complete CRUD operations for events
 from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_
 
 from dependencies import get_db
@@ -40,7 +40,10 @@ def list_events(
     Public endpoint - no authentication required.
     Only returns non-deleted events.
     """
-    query = db.query(Events).filter(Events.deleted_at == None)
+    query = db.query(Events).filter(Events.deleted_at == None).options(
+        joinedload(Events.ticket_types),
+        joinedload(Events.organizer)
+    )
 
     # Apply filters
     if search:
@@ -79,6 +82,9 @@ def get_event(event_id: int, db: Session = Depends(get_db)):
     """
     event = db.query(Events).filter(
         and_(Events.id == event_id, Events.deleted_at == None)
+    ).options(
+        joinedload(Events.ticket_types),
+        joinedload(Events.organizer)
     ).first()
 
     if not event:
@@ -133,6 +139,9 @@ def create_event(
         db.commit()
         db.refresh(db_event)
 
+        # Refresh relationships
+        db.refresh(db_event, attribute_names=['ticket_types', 'organizer'])
+
         return db_event
 
     except Exception as e:
@@ -176,6 +185,9 @@ def update_event(
 
         db.commit()
         db.refresh(event)
+
+        # Refresh relationships
+        db.refresh(event, attribute_names=['ticket_types', 'organizer'])
 
         return event
 

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, HttpUrl, field_validator, ConfigDict
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import List, Optional
 
 
 class EventBase(BaseModel):
@@ -14,7 +15,12 @@ class EventBase(BaseModel):
     @classmethod
     def validate_event_date(cls, v: datetime) -> datetime:
         """Validate that event date is in the future."""
-        if v <= datetime.utcnow():
+        # Make datetime timezone-aware if it's naive (assume UTC)
+        if v.tzinfo is None:
+            v = v.replace(tzinfo=timezone.utc)
+
+        # Compare with current UTC time (timezone-aware)
+        if v <= datetime.now(timezone.utc):
             raise ValueError('Event date must be in the future')
         return v
 
@@ -31,7 +37,12 @@ class EventCreate(BaseModel):
     @classmethod
     def validate_event_date(cls, v: datetime) -> datetime:
         """Validate that event date is in the future."""
-        if v <= datetime.utcnow():
+        # Make datetime timezone-aware if it's naive (assume UTC)
+        if v.tzinfo is None:
+            v = v.replace(tzinfo=timezone.utc)
+
+        # Compare with current UTC time (timezone-aware)
+        if v <= datetime.now(timezone.utc):
             raise ValueError('Event date must be in the future')
         return v
 
@@ -48,13 +59,43 @@ class EventUpdate(BaseModel):
     @classmethod
     def validate_event_date(cls, v: datetime | None) -> datetime | None:
         """Validate that event date is in the future."""
-        if v is not None and v <= datetime.utcnow():
-            raise ValueError('Event date must be in the future')
+        if v is not None:
+            # Make datetime timezone-aware if it's naive (assume UTC)
+            if v.tzinfo is None:
+                v = v.replace(tzinfo=timezone.utc)
+
+            # Compare with current UTC time (timezone-aware)
+            if v <= datetime.now(timezone.utc):
+                raise ValueError('Event date must be in the future')
         return v
 
 
+class OrganizerInfo(BaseModel):
+    """Organizer information for event response."""
+    id: int
+    firstname: str
+    surname: str
+    email: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TicketTypeInfo(BaseModel):
+    """Ticket type information for event response."""
+    id: int
+    event_id: int
+    name: str
+    description: str
+    price: float
+    quantity: int
+    available_quantity: int
+    sold_quantity: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class EventResponse(BaseModel):
-    """Event response schema."""
+    """Event response schema with ticket types and organizer."""
     id: int
     event_name: str
     description: str
@@ -62,6 +103,8 @@ class EventResponse(BaseModel):
     location: str
     date: datetime
     image: str
+    organizer: Optional[OrganizerInfo] = None
+    ticket_types: List[TicketTypeInfo] = []
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -66,8 +66,8 @@ async def register(request: Request, user: UserBase, db: Session = Depends(get_d
         db.refresh(db_user)
 
         # Generate tokens
-        access_token = create_access_token(data={"sub": db_user.id})
-        refresh_token = create_refresh_token(data={"sub": db_user.id})
+        access_token = create_access_token(data={"sub": str(db_user.id)})
+        refresh_token = create_refresh_token(data={"sub": str(db_user.id)})
 
         logger.info(f"New user registered: {db_user.email}")
 
@@ -126,8 +126,8 @@ async def login(
         )
 
     # Generate tokens
-    access_token = create_access_token(data={"sub": user.id})
-    refresh_token = create_refresh_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
+    refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     logger.info(f"User logged in: {user.email}")
 
@@ -174,12 +174,20 @@ async def refresh_access_token(
             detail="Invalid token type"
         )
 
-    # Get user ID
-    user_id: int | None = payload.get("sub")
-    if user_id is None:
+    # Get user ID (convert from string to int)
+    user_id_str: str | None = payload.get("sub")
+    if user_id_str is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token payload"
+        )
+
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid user ID in token"
         )
 
     # Verify user exists and is active
@@ -191,7 +199,7 @@ async def refresh_access_token(
         )
 
     # Generate new access token
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return AccessTokenResponse(
         access_token=access_token,

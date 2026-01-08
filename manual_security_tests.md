@@ -1,4 +1,3 @@
-
 # TicketProZW - Security Testing Guide
 
 ## Prerequisites

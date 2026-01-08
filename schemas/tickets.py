@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, ConfigDict
+from typing import Optional
+from datetime import datetime
 
 
 class TicketTypeBase(BaseModel):
@@ -60,6 +62,8 @@ class TicketTypeResponse(BaseModel):
     description: str
     price: float
     quantity: int
+    available_quantity: int
+    sold_quantity: int
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -87,15 +91,40 @@ class TicketUpdate(BaseModel):
     checked_out: bool | None = None
 
 
+class EventInfo(BaseModel):
+    """Event information for ticket response."""
+    id: int
+    event_name: str
+    date: datetime
+    location: str
+    image: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class OrderInfo(BaseModel):
+    """Order information for ticket response."""
+    id: int
+    event_id: int
+    event: Optional[EventInfo] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class TicketResponse(BaseModel):
-    """Ticket response schema."""
+    """Ticket response schema with relationships."""
     id: int
     order_id: int
     ticket_type_id: int
-    seat_number: str
+    seat_number: Optional[str] = None
     qr_code: str
+    qr_code_data: Optional[str] = None
     checked_in: bool
     checked_out: bool
+    validated_at: Optional[datetime] = None
+    validated_by: Optional[int] = None
+    ticket_type: Optional[TicketTypeResponse] = None
+    order: Optional[OrderInfo] = None
 
     model_config = ConfigDict(from_attributes=True)
 

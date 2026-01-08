@@ -4,7 +4,7 @@ Tickets router - Complete CRUD operations for tickets and ticket types
 from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_
 
 from dependencies import get_db
@@ -47,8 +47,11 @@ def list_tickets(
     Requires authentication.
     Users can only see tickets from their own orders unless they are admin.
     """
-    # Base query - join with orders to filter by user
-    query = db.query(Tickets).join(Orders).filter(Tickets.deleted_at == None)
+    # Base query - join with orders to filter by user, eager load relationships
+    query = db.query(Tickets).join(Orders).filter(Tickets.deleted_at == None).options(
+        joinedload(Tickets.ticket_type),
+        joinedload(Tickets.order).joinedload(Orders.event)
+    )
 
     # Filter by user unless admin
     if current_user.role != "admin":
@@ -85,6 +88,9 @@ def get_ticket(
     """
     ticket = db.query(Tickets).join(Orders).filter(
         and_(Tickets.id == ticket_id, Tickets.deleted_at == None)
+    ).options(
+        joinedload(Tickets.ticket_type),
+        joinedload(Tickets.order).joinedload(Orders.event)
     ).first()
 
     if not ticket:
@@ -153,6 +159,10 @@ def create_ticket(
         db.add(db_ticket)
         db.commit()
         db.refresh(db_ticket)
+        # Refresh relationships to include ticket_type and order with event in response
+        db.refresh(db_ticket, attribute_names=['ticket_type', 'order'])
+        if db_ticket.order:
+            db.refresh(db_ticket.order, attribute_names=['event'])
 
         return db_ticket
 
@@ -174,9 +184,12 @@ def update_ticket(
     Requires authentication.
     Users can only update tickets from their own orders unless they are admin.
     """
-    # Get ticket with order
+    # Get ticket with order and ticket_type
     ticket = db.query(Tickets).join(Orders).filter(
         and_(Tickets.id == ticket_id, Tickets.deleted_at == None)
+    ).options(
+        joinedload(Tickets.ticket_type),
+        joinedload(Tickets.order).joinedload(Orders.event)
     ).first()
 
     if not ticket:
@@ -195,6 +208,10 @@ def update_ticket(
 
         db.commit()
         db.refresh(ticket)
+        # Refresh relationships
+        db.refresh(ticket, attribute_names=['ticket_type', 'order'])
+        if ticket.order:
+            db.refresh(ticket.order, attribute_names=['event'])
 
         return ticket
 
@@ -385,6 +402,24 @@ def update_ticket_type(
         # Update fields (only if provided)
         update_data = ticket_type_data.model_dump(exclude_unset=True)
 
+        # Special handling for quantity updates
+        if 'quantity' in update_data:
+            new_quantity = update_data['quantity']
+            current_sold = ticket_type.sold_quantity or 0
+
+            # Validate that new quantity is not less than already sold tickets
+            if new_quantity < current_sold:
+                raise BadRequestException(
+                    detail=f"Cannot reduce quantity to {new_quantity}. Already sold {current_sold} tickets."
+                )
+
+            # Update available_quantity to reflect the new total
+            ticket_type.available_quantity = new_quantity - current_sold
+            ticket_type.quantity = new_quantity
+            # Remove quantity from update_data since we handled it manually
+            update_data.pop('quantity')
+
+        # Update remaining fields
         for field, value in update_data.items():
             setattr(ticket_type, field, value)
 
@@ -393,6 +428,9 @@ def update_ticket_type(
 
         return ticket_type
 
+    except BadRequestException:
+        db.rollback()
+        raise
     except Exception as e:
         db.rollback()
         raise BadRequestException(detail=f"Failed to update ticket type: {str(e)}")
